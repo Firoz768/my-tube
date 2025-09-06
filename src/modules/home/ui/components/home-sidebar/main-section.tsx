@@ -8,6 +8,8 @@ import { SidebarGroup,
         SidebarMenuButton,
         SidebarMenuItem } from "@/components/ui/sidebar";
 import Link from "next/link";
+import { use } from "react";
+import { useClerk,useAuth } from "@clerk/nextjs";
 
 const items = [
   {
@@ -28,6 +30,8 @@ const items = [
   },
 ];
 const MainSection = () => {
+  const clerk = useClerk();
+  const {isSignedIn} = useAuth();
   return (
   <SidebarGroup>
     <SidebarGroupContent>
@@ -38,8 +42,11 @@ const MainSection = () => {
             
             isActive={false}  // You can implement active state logic here
             //Add onClick handler if needed
-            onClick={()=>{
-
+            onClick={(e)=>{
+              if(!isSignedIn && item.auth){
+                e.preventDefault();
+                clerk.openSignIn();
+              }
             }} >
                 <Link href={item.href} className="flex items-center gap-4"> 
                     <item.icon/>

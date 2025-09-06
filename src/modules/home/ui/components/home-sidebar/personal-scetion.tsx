@@ -1,7 +1,7 @@
 "use client";
 
 import { HistoryIcon, ListVideoIcon, ThumbsUpIcon } from "lucide-react";
-
+import { useClerk, useAuth } from "@clerk/nextjs";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -33,6 +33,8 @@ const items = [
   },
 ];
 const PersonalSection = () => {
+   const clerk = useClerk();
+  const {isSignedIn} = useAuth();
   return (
     <SidebarGroup>
       <SidebarGroupLabel>You</SidebarGroupLabel>
@@ -45,7 +47,12 @@ const PersonalSection = () => {
                 asChild
                 isActive={false} // You can implement active state logic here
                 //Add onClick handler if needed
-                onClick={() => {}}
+                onClick={(e) => {
+                  if (!isSignedIn && item.auth) {
+                    e.preventDefault();
+                    clerk.openSignIn();
+                  }
+                }}
               >
                 <Link href={item.href} className="flex items-center gap-4">
                   <item.icon />
