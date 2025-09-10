@@ -1,9 +1,9 @@
-import React from 'react'
-import Image from "next/image"
-const Homepage = () => {
+import { trpc } from "@/trpc/server";
+const Homepage = async () => {
+  const data = await trpc.hello({text : "Firoz"})
   return (
     <div >
-      <p>I will Load Videos Shortly</p>
+     Client Component Says : {data.greeting}
     </div>
   )
 }
